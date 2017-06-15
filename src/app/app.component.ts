@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +6,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app works!';
+
+  @ViewChild("myCanvas") myCanvas:ElementRef;
+
+  ngAfterViewInit(){
+
+    let context : CanvasRenderingContext2D = this.myCanvas.nativeElement.getContext("2d");
+    context.fillStyle = 'blue';
+    context.fillRect(10,10,150,150);
+
+  }
+
 }
