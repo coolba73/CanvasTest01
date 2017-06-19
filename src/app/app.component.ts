@@ -14,6 +14,7 @@ export class AppComponent {
 
   xpoint:number=0;
   ypoint:number=0;
+  message:string='test';
 
   @ViewChild("myCanvas") myCanvas:ElementRef;
   
@@ -23,19 +24,25 @@ export class AppComponent {
     context.fillStyle = 'blue';
     context.fillRect(10,10,150,150);
 
+    this.captureEvents(this.myCanvas.nativeElement);
+
   }
 
-  /*
-  ############################################################################################################################
-  
-  captureEvents
-  
-  ############################################################################################################################
-  */
-  captureEvents(canvasEl:HTMLCanvasElement){
-    
-    Observable.fromEvent(canvasEl,'mousemove')
+  private captureEvents(canvasEl:HTMLCanvasElement)
+  {
+    Observable.fromEvent(canvasEl,'mousemove').subscribe( (res : MouseEvent) =>
+      {
+        this.xpoint = res.clientX;
+        this.ypoint = res.clientY;
+      }
+    );
   }
+
+
+
+
+
+ 
 
 
 }//class
