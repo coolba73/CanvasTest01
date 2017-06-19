@@ -4,8 +4,10 @@ import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/pairWise';
 import 'rxjs/add/operator/switchMap';
-import {BoxBase} from "./shared/drawobject/boxbase";
+import { BoxBase } from "./shared/drawobject/boxbase";
 import { BaseObject  } from "./shared/drawobject/baseobject";
+import { LineBase } from "./shared/drawobject/linebase";
+
 
 @Component({
   selector: 'app-root',
@@ -29,26 +31,40 @@ export class AppComponent {
     
     let objects : BaseObject[] = [];
 
-    let myBox = new BoxBase();
+    let myBox = new BoxBase(context);
 
-    myBox.x = 10;
-    myBox.y = 10;
+    myBox.X = 10;
+    myBox.Y = 10;
+    myBox.FillColor = "lightgreen";
     objects.push(myBox);
 
-    myBox = new BoxBase();
+    myBox = new BoxBase(context);
 
-    myBox.x = 150;
-    myBox.y = 10;
+    myBox.X = 150;
+    myBox.Y = 10;
+    myBox.FillColor = 'lightblue';
     objects.push(myBox);
+
+
+    let myLine = new LineBase(context);
+
+    myLine.X1 = 100;
+    myLine.Y1 = 100;
+    myLine.X2 = 200;
+    myLine.Y2 = 200;
+
+    objects.push(myLine);
+
 
     for(let obj of objects){
-      obj.Draw(context);
+      obj.Draw();
+
+      if (obj instanceof BoxBase)
+        console.log('box base');
+      else if(obj instanceof LineBase)
+        console.log('line base');
+      
     }
-
-
-
-    //myBox.Draw(context);
-    
 
     this.captureEvents(this.myCanvas.nativeElement);
 
@@ -64,6 +80,7 @@ export class AppComponent {
       {
         this.xpoint = res.clientX - rect.left;
         this.ypoint = res.clientY - rect.top;
+
       }
     );
 

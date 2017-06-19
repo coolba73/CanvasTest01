@@ -1,19 +1,31 @@
 
-export class BaseObject{
-    
-    x : number;
-    y : number;
-    width : number;
-    height : number;
+export class BaseObject {
 
-    constructor(){
+    X: number;
+    Y: number;
+    Width: number;
+    Height: number;
+    FillColor: string;
+    YesSelected: boolean;
+    YesMouseOver : boolean;
+    X1: number;
+    X2: number;
+    Y1: number;
+    Y2: number;
+    ctx : CanvasRenderingContext2D;
+
+
+    constructor(context : CanvasRenderingContext2D) {
+        this.ctx = context;
+    }
+
+    Draw() {
 
     }
 
-    Draw(ctx:CanvasRenderingContext2D)
-    {
-
+    CheckMouseOver(X: number, Y: number): boolean {
+        return false;
     }
 
-    
 }
+
