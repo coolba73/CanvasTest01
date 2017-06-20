@@ -13,15 +13,15 @@ export class BaseObject {
     Y1: number;
     Y2: number;
     ctx : CanvasRenderingContext2D;
+    canvas : HTMLCanvasElement;
 
 
-    constructor(context : CanvasRenderingContext2D) {
-        this.ctx = context;
+    constructor(canvas : HTMLCanvasElement) {
+        this.canvas = canvas;
+        this.ctx = this.canvas.getContext("2d");
     }
 
-    Draw() {
-
-    }
+    Draw() {}
 
     CheckMouseOver(X: number, Y: number): boolean {
         return false;

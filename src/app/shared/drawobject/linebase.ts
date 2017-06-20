@@ -10,7 +10,7 @@ export class LineBase extends BaseObject{
         
         this.ctx.beginPath();
         this.ctx.moveTo(this.X1, this.Y1);
-        this.ctx.lineTo(this.X2, this.Y2);
+        this.ctx.lineTo(this.X2, this.Y2);8
         this.ctx.stroke();
         
     }
