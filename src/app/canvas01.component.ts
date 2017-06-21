@@ -195,7 +195,37 @@ export class Canvas01Component{
             obj.Draw(this.ctx);
         }
 
-        console.log(this.objects);
     }
+
+    /*
+    ############################################################################################################################
+    
+    Save
+    
+    ############################################################################################################################
+    */
+    Save(){
+
+        console.log(this.objects);
+
+        console.log( JSON.stringify(this.objects));
+    }
+
+    /*
+    ############################################################################################################################
+    
+    Open
+    
+    ############################################################################################################################
+    */
+    Open(){
+
+        let jsonstr = `[{"FillColor":"lightgreen","LineColor":"gray","x":125,"y":104,"Width":100,"Height":100,"Title":"0","YesMouseOver":false,"mover_x1":125,"mover_y1":154,"mover_x2":175,"mover_y2":104,"mover_x3":225,"mover_y3":154,"mover_x4":175,"mover_y4":204},{"FillColor":"lightgreen","LineColor":"gray","x":368,"y":217,"Width":100,"Height":100,"Title":"1","YesMouseOver":false,"mover_x1":368,"mover_y1":267,"mover_x2":418,"mover_y2":217,"mover_x3":468,"mover_y3":267,"mover_x4":418,"mover_y4":317}]`;
+        let re = JSON.parse(jsonstr);
+
+        console.log(re);
+
+    }
+
 
 }//class
