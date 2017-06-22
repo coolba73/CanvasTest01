@@ -1,4 +1,14 @@
-export class BaseObject{
+class Serializable{
+    fillFromJSON(json:string){
+        var jsonObj = JSON.parse(json);
+        for (var propName in jsonObj){
+            this[propName] =jsonObj[propName]
+        }
+    }
+}
+
+
+export class BaseObject extends Serializable{
 
     //________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
     Id : string;
