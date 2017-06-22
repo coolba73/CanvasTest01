@@ -15,6 +15,7 @@ export class BaseObject extends Serializable{
     YesSelected : boolean;
     YesMouseOver : boolean;
     Title : string;
+    Type : string;
     
     //________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
     Draw(ctx:CanvasRenderingContext2D){}

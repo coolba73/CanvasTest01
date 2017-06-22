@@ -40,6 +40,7 @@ export class BoxBase extends BaseObject{
 
         this.FillColor = 'white';
         this.LineColor = 'gray';
+        this.Type = BoxBase.name;
 
     }
 

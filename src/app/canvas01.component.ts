@@ -6,6 +6,7 @@ import 'rxjs/add/operator/pairWise';
 import 'rxjs/add/operator/switchMap';
 import { BaseObject } from "./shared/shape/BaseObject";
 import { BoxBase } from "./shared/shape/BoxBase";
+import { UUID } from "angular2-uuid";
 
 @Component({
     templateUrl : './canvas01.component.html',
@@ -37,6 +38,8 @@ export class Canvas01Component{
     ypoint : number;
 
     YesMouseDown : boolean = false;
+
+    saveobject : string;
 
 
     /*
@@ -174,6 +177,8 @@ export class Canvas01Component{
         myBox.Width = 100;
         myBox.Height = 100;
         myBox.Title = this.objects.length.toString();
+        myBox.Id = UUID.UUID();
+        
         this.objects.push(myBox);
 
         this.Draw();
@@ -208,7 +213,12 @@ export class Canvas01Component{
 
         console.log(this.objects);
 
-        console.log( JSON.stringify(this.objects));
+        // console.log( JSON.stringify(this.objects));
+
+        this.saveobject = JSON.stringify(this.objects);
+
+        console.log(this.saveobject);
+
     }
 
     /*
@@ -220,43 +230,32 @@ export class Canvas01Component{
     */
     Open(){
 
-        let jsonstr = '[{"FillColor":"lightgreen","LineColor":"gray","x":125,"y":104,"Width":100,"Height":100,"Title":"0","YesMouseOver":false,"mover_x1":125,"mover_y1":154,"mover_x2":175,"mover_y2":104,"mover_x3":225,"mover_y3":154,"mover_x4":175,"mover_y4":204},{"FillColor":"lightgreen","LineColor":"gray","x":368,"y":217,"Width":100,"Height":100,"Title":"1","YesMouseOver":false,"mover_x1":368,"mover_y1":267,"mover_x2":418,"mover_y2":217,"mover_x3":468,"mover_y3":267,"mover_x4":418,"mover_y4":317}]';
-        let jsonstr2 = '{"FillColor":"lightgreen","LineColor":"gray","x":125,"y":104,"Width":100,"Height":100,"Title":"0","YesMouseOver":false,"mover_x1":125,"mover_y1":154,"mover_x2":175,"mover_y2":104,"mover_x3":225,"mover_y3":154,"mover_x4":175,"mover_y4":204}';
-        let jsonobj = JSON.parse(jsonstr);
-
-        // console.log(re);
-        // console.log(re.length);
+        let jsonobj = JSON.parse(this.saveobject);
 
         let myBox : BoxBase;
 
         for (let obj of jsonobj){
         
             myBox = new BoxBase();
-            console.log(JSON.stringify( obj));
             myBox.fillFromJSON(JSON.stringify( obj));
             this.objects.push(myBox);
-
         }
 
         this.Draw();
 
-        // let keys = Object.keys(re[0]);
+    }
 
-        // console.log(keys);
+    /*
+    ############################################################################################################################
+    
+    Clear
+    
+    ############################################################################################################################
+    */
+    Clear(){
 
-        // var myBox = new BoxBase();
-
-        // // console.log(jsonobj[0]);
-
-        // myBox.fillFromJSON(jsonstr2);
-
-        // console.log(myBox);
-
-        // this.objects.push(myBox);
-
-        // this.Draw();
-
-
+        this.objects = [];
+        this.Draw();
     }
 
 
