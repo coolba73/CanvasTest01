@@ -7,10 +7,12 @@ import 'rxjs/add/operator/switchMap';
 import { BaseObject } from "./shared/shape/BaseObject";
 import { BoxBase } from "./shared/shape/BoxBase";
 import { UUID } from "angular2-uuid";
+import { DiagramService } from "./shared/service/DiagramService";
 
 @Component({
     templateUrl : './canvas01.component.html',
-    selector:'app-root'
+    selector:'app-root',
+    providers:[DiagramService]
 })
 export class Canvas01Component{
 
@@ -41,6 +43,8 @@ export class Canvas01Component{
 
     saveobject : string;
 
+
+    constructor(private _diagramService : DiagramService){}
 
     /*
     ############################################################################################################################
@@ -211,13 +215,26 @@ export class Canvas01Component{
     */
     Save(){
 
-        console.log(this.objects);
+        //console.log(this.objects);
 
         // console.log( JSON.stringify(this.objects));
 
         this.saveobject = JSON.stringify(this.objects);
 
-        console.log(this.saveobject);
+        let diagramJson = JSON.stringify(this.objects);
+        let userid = UUID.UUID();
+        let diagramId = UUID.UUID();
+
+        this._diagramService.SaveDiagram(userid,diagramId,'test', diagramJson).subscribe(
+            data =>
+            {
+                alert('ok');
+            },
+            error => {
+                alert('error');
+                console.log(error);
+            }
+        );
 
     }
 
