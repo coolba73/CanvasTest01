@@ -29,6 +29,8 @@ export class DiagramService{
         body.append("DiagramTitle", DiagramTitle);
         body.append("DiagramJson", DiagramJson);
 
+        console.log(DiagramJson);
+
         // console.log(body.toString());
 
         // let headers = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});
