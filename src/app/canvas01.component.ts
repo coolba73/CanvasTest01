@@ -221,20 +221,33 @@ export class Canvas01Component{
 
         this.saveobject = JSON.stringify(this.objects);
 
-        let diagramJson = JSON.stringify(this.objects);
+        console.log(this.saveobject);
+        
         let userid = UUID.UUID();
         let diagramId = UUID.UUID();
 
-        this._diagramService.SaveDiagram(userid,diagramId,'test', diagramJson).subscribe(
-            data =>
+        // this._diagramService.SaveDiagram(userid,diagramId,'test', this.saveobject).subscribe(
+        //     data =>
+        //     {
+        //         alert('ok');
+        //     },
+        //     error => {
+        //         alert('error');
+        //         console.log(error);
+        //     }
+        // );
+
+        this._diagramService.SaveDiagramByJson(userid,diagramId,'test', this.saveobject).subscribe(
+        data =>
             {
+                console.log(data);
                 alert('ok');
             },
             error => {
                 alert('error');
-                console.log(error);
             }
         );
+
 
     }
 

@@ -29,7 +29,6 @@ export class DiagramService{
         body.append("DiagramTitle", DiagramTitle);
         body.append("DiagramJson", DiagramJson);
 
-        console.log(DiagramJson);
 
         // console.log(body.toString());
 
@@ -49,5 +48,42 @@ export class DiagramService{
         // ===================================================================
 
     }//SaveDiagrma
+
+
+    /*
+    ############################################################################################################################
+    
+    SaveDiagramByJson
+    
+    ############################################################################################################################
+    */
+    SaveDiagramByJson(UserID:string, DiagramId:string, DiagramTitle:string, DiagramJson:string ){
+        
+        
+        // {
+        //     "userid" : "test",
+        //     "diagramid" : "test",
+        //     "diagramtitle"  : "test",
+        //     "diagramjson" :
+        //     [
+        //         {"FillColor":"lightgreen","LineColor":"gray","Type":"BoxBase","x":10,"y":10,"Width":100,"Height":100,"Title":"0","Id":"3d3f0bb2-cbd1-fac9-6517-15a587608084"},
+        //         {"FillColor":"lightgreen","LineColor":"gray","Type":"BoxBase","x":10,"y":10,"Width":100,"Height":100,"Title":"1","Id":"d00454bd-93f5-05ad-f36c-6c5b523ac46c"}
+        //     ]
+        // }
+
+        let body = JSON.stringify({
+            userid : UserID,
+            diagramid : DiagramId,
+            diagramtitle : DiagramTitle,
+            diagramjson : DiagramJson
+        });
+
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post('http://localhost:62988/api/Diagram2', body, options).map(res=>res.json());
+
+    }
 
 }//class
