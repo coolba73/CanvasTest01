@@ -221,7 +221,7 @@ export class Canvas01Component{
 
         this.saveobject = JSON.stringify(this.objects);
 
-        console.log(this.saveobject);
+        // console.log(this.saveobject);
         
         let userid = UUID.UUID();
         let diagramId = UUID.UUID();
@@ -241,10 +241,11 @@ export class Canvas01Component{
         data =>
             {
                 console.log(data);
-                alert('ok');
+                // alert('ok');
             },
             error => {
-                alert('error');
+                console.log('error');
+                // alert('error');
             }
         );
 
