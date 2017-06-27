@@ -79,11 +79,28 @@ export class DiagramService{
         });
 
         let headers = new Headers({ 'Content-Type': 'application/json' });
-
         let options = new RequestOptions({ headers: headers });
 
         return this.http.post('http://localhost:62988/api/Diagram2', body, options).map(res=>res.json());
 
+    }
+
+    /*
+    ############################################################################################################################
+    
+    OpenDiagram
+    
+    ############################################################################################################################
+    */
+    OpenDiagram(key1:string,key2:string){
+
+        let body = new URLSearchParams();
+
+        body.append("key1",key1);
+        body.append("key2",key2);
+        
+        return this.http.get('http://localhost:62988/api/Diagram2/getdiagram', {search:body.toString()} ).map(res=>res.json());
+        
     }
 
 }//class

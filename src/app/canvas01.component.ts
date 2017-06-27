@@ -261,18 +261,44 @@ export class Canvas01Component{
     */
     Open(){
 
-        let jsonobj = JSON.parse(this.saveobject);
+        // let jsonobj = JSON.parse(this.saveobject);
 
-        let myBox : BoxBase;
+        // let myBox : BoxBase;
 
-        for (let obj of jsonobj){
+        // for (let obj of jsonobj){
         
-            myBox = new BoxBase();
-            myBox.fillFromJSON(JSON.stringify( obj));
-            this.objects.push(myBox);
-        }
+        //     myBox = new BoxBase();
+        //     myBox.fillFromJSON(JSON.stringify( obj));
+        //     this.objects.push(myBox);
+        // }
 
-        this.Draw();
+        // this.Draw();
+
+        this._diagramService.OpenDiagram("879bac02-8ae2-21d3-ebfb-7d7fff0ce6f5","d0d035c3-e4fa-612d-1d44-4a7df00c00a9").subscribe(
+            data =>{
+                alert('ok');
+                // console.log(data.value);
+
+                let jsonobj = JSON.parse(data.value);
+
+                let myBox : BoxBase;
+
+                for (let obj of jsonobj){
+                
+                    myBox = new BoxBase();
+                    myBox.fillFromJSON(JSON.stringify( obj));
+                    this.objects.push(myBox);
+                }
+
+                this.Draw();
+
+            }
+            ,error =>{
+                alert('error');
+                console.log(error);
+            }
+        );
+
 
     }
 
