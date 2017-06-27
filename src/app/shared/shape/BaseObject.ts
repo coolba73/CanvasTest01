@@ -21,7 +21,7 @@ export class BaseObject extends Serializable{
     Draw(ctx:CanvasRenderingContext2D){}
 
     //________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-    CheckMouseOver(x:number, y:number) : boolean {
+    CheckMouseOver(ctx:CanvasRenderingContext2D  , x:number, y:number) : boolean {
         return false;
     }
     

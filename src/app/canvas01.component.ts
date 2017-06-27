@@ -100,7 +100,6 @@ export class Canvas01Component{
 
             var re = this.calPoint(canvasEl, res);
             this.Canvas_MouseMove(re.rex, re.rey);
-            
 
         });
 
@@ -120,8 +119,6 @@ export class Canvas01Component{
             var re = this.calPoint(canvasEl, res);
             this.Canvas_MouseUp(re.rex, re.rey);
         });
-
-        
 
     }
     /*
@@ -182,7 +179,7 @@ export class Canvas01Component{
         {
             this.objects.forEach(i => {
 
-                if (i.CheckMouseOver(x,y))
+                if (i.CheckMouseOver(this.ctx,x,y))
                 {
                     this.message = i.Title;
                 }
@@ -205,7 +202,14 @@ export class Canvas01Component{
 
         this.YesMouseDown = true;
 
-        this.currentObj = this.objects.find(i=> i.CheckMouseOver(x,y));
+        this.objects.forEach(element => {
+            element.YesSelected = false;
+        });
+
+        this.currentObj = this.objects.find(i=> i.CheckMouseOver(this.ctx,x,y));
+
+        if (this.currentObj != null) this.currentObj.YesSelected = true;
+
 
         this.pre_x = x;
         this.pre_y = y;
