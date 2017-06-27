@@ -73,18 +73,83 @@ export class Canvas01Component{
         
         let rect = canvasEl.getBoundingClientRect();
 
+        
+
+        // Observable.fromEvent(canvasEl,'mousemove').subscribe( (res:MouseEvent)=>{
+        //     this.Canvas_MouseMove(res.clientX - rect.left, res.clientY - rect.top);
+        // });
+
         Observable.fromEvent(canvasEl,'mousemove').subscribe( (res:MouseEvent)=>{
-            this.Canvas_MouseMove(res.clientX - rect.left, res.clientY - rect.top);
+
+            // var x;
+            // var y;
+
+            // if (res.pageX || res.pageY) { 
+            //     x = res.pageX;
+            //     y = res.pageY;
+            // }
+            // else { 
+            //     x = res.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
+            //     y = res.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
+            // } 
+
+            // x -= canvasEl.offsetLeft;
+            // y -= canvasEl.offsetTop;
+
+            // this.Canvas_MouseMove(x,y);
+
+            var re = this.calPoint(canvasEl, res);
+            this.Canvas_MouseMove(re.rex, re.rey);
+            
+
         });
 
         Observable.fromEvent(canvasEl,'mousedown').subscribe( (res:MouseEvent)=>{
-            this.Canvas_MouseDown(res.clientX - rect.left, res.clientY - rect.top);
+
+            //this.Canvas_MouseDown(res.clientX - rect.left, res.clientY - rect.top);
+
+            var re = this.calPoint(canvasEl, res);
+            this.Canvas_MouseDown(re.rex, re.rey);
+
         });
 
         Observable.fromEvent(canvasEl,'mouseup').subscribe( (res:MouseEvent)=>{
-            this.Canvas_MouseUp(res.clientX - rect.left, res.clientY - rect.top);
+
+            // this.Canvas_MouseUp(res.clientX - rect.left, res.clientY - rect.top);
+
+            var re = this.calPoint(canvasEl, res);
+            this.Canvas_MouseUp(re.rex, re.rey);
         });
 
+        
+
+    }
+    /*
+    ############################################################################################################################
+    
+    calPoint
+    
+    ############################################################################################################################
+    */
+    calPoint (canvasEl:HTMLCanvasElement ,res:MouseEvent)  {
+        let rect = canvasEl.getBoundingClientRect();
+
+        var rex;
+        var rey;
+
+        if (res.pageX || res.pageY) { 
+            rex = res.pageX;
+            rey = res.pageY;
+        }
+        else { 
+            rex = res.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
+            rey = res.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
+        } 
+
+        rex -= canvasEl.offsetLeft;
+        rey -= canvasEl.offsetTop;
+
+        return {rex,rey};
     }
 
 
@@ -276,6 +341,7 @@ export class Canvas01Component{
 
         this._diagramService.OpenDiagram("879bac02-8ae2-21d3-ebfb-7d7fff0ce6f5","d0d035c3-e4fa-612d-1d44-4a7df00c00a9").subscribe(
             data =>{
+
                 alert('ok');
                 // console.log(data.value);
 
