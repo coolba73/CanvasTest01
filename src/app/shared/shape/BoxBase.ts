@@ -13,14 +13,10 @@ export class BoxBase extends BaseObject{
     y : number;
     Width : number;
     Height : number;
-    r : number = 10;
-
+    r : number = 8;
     
     FillColor : string;
     LineColor : string;
-
-
-
 
     /*
     ############################################################################################################################
@@ -30,8 +26,8 @@ export class BoxBase extends BaseObject{
     ############################################################################################################################
     */
     constructor(){
-        super();
 
+        super();
         this.FillColor = 'white';
         this.LineColor = 'gray';
         this.Type = BoxBase.name;
