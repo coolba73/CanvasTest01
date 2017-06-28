@@ -46,6 +46,11 @@ export class Canvas01Component{
 
     yesAddLine : boolean = false;
 
+    KeyDownMessage : string = "";
+
+    YesCanvasMouseOver : boolean = false;
+
+
     constructor(private _diagramService : DiagramService){}
 
     /*
@@ -75,30 +80,7 @@ export class Canvas01Component{
         
         let rect = canvasEl.getBoundingClientRect();
 
-        
-
-        // Observable.fromEvent(canvasEl,'mousemove').subscribe( (res:MouseEvent)=>{
-        //     this.Canvas_MouseMove(res.clientX - rect.left, res.clientY - rect.top);
-        // });
-
         Observable.fromEvent(canvasEl,'mousemove').subscribe( (res:MouseEvent)=>{
-
-            // var x;
-            // var y;
-
-            // if (res.pageX || res.pageY) { 
-            //     x = res.pageX;
-            //     y = res.pageY;
-            // }
-            // else { 
-            //     x = res.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
-            //     y = res.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
-            // } 
-
-            // x -= canvasEl.offsetLeft;
-            // y -= canvasEl.offsetTop;
-
-            // this.Canvas_MouseMove(x,y);
 
             var re = this.calPoint(canvasEl, res);
             this.Canvas_MouseMove(re.rex, re.rey);
@@ -107,22 +89,80 @@ export class Canvas01Component{
 
         Observable.fromEvent(canvasEl,'mousedown').subscribe( (res:MouseEvent)=>{
 
-            //this.Canvas_MouseDown(res.clientX - rect.left, res.clientY - rect.top);
-
             var re = this.calPoint(canvasEl, res);
+            this.YesCanvasMouseOver = true;
             this.Canvas_MouseDown(re.rex, re.rey);
 
         });
 
         Observable.fromEvent(canvasEl,'mouseup').subscribe( (res:MouseEvent)=>{
 
-            // this.Canvas_MouseUp(res.clientX - rect.left, res.clientY - rect.top);
-
             var re = this.calPoint(canvasEl, res);
             this.Canvas_MouseUp(re.rex, re.rey);
         });
 
+        Observable.fromEvent(canvasEl,'mouseout').subscribe(()=> {
+            this.YesCanvasMouseOver = false;
+        });
+
+        Observable.fromEvent(canvasEl,'mouseover').subscribe(()=> {
+        });
+
+
+        Observable.fromEvent(document,'keydown').subscribe((e:KeyboardEvent)=>{
+            this.Canvas_KeyDown(e);
+        });
+
+
     }
+
+    /*
+    ############################################################################################################################
+    
+    Canvas_KeyDown
+    
+    ############################################################################################################################
+    */
+    Canvas_KeyDown(e : KeyboardEvent){
+
+        if (this.YesCanvasMouseOver)
+        {
+            switch(e.key)
+            {
+                case"Delete":{
+
+                    console.log('delete');
+                    console.log(this.objects.find(i=>i.YesSelected));
+
+                    this.objects.forEach(i => {
+                        if (i.YesSelected)
+                        {
+                            this.DeleteObject(i);
+                        }
+                    });
+
+                    this.Draw();
+
+                    break;
+                }
+            }
+        }
+            
+    }
+
+    /*
+    ############################################################################################################################
+    
+    DeleteObject
+    
+    ############################################################################################################################
+    */
+    DeleteObject(obj:BaseObject){
+
+        let index = this.objects.indexOf(obj);
+        if (index > -1) this.objects.splice(index,1);
+    }
+
     /*
     ############################################################################################################################
     
@@ -174,8 +214,29 @@ export class Canvas01Component{
 
             if (this.yesAddLine)
             {
-                (<LineBase>this.currentObj).x2 = x;
-                (<LineBase>this.currentObj).y2 = y;
+                let line : LineBase = <LineBase>this.currentObj;
+                let cirpt;
+                let box = this.objects.find(i=>( 
+                    line.Box_1_ID != i.Id &&
+                    i instanceof BoxBase &&
+                    (cirpt = (<BoxBase>i).CheckCircleMouseOver(this.ctx,x,y)).PointIndex > 0
+                    )
+                );
+
+                if (box != undefined)
+                {
+                    line.Box_2_ID = box.Id;
+                    line.Box_2_PointIndex = cirpt.PointIndex;
+                    line.x2 = cirpt.x;
+                    line.y2 = cirpt.y;
+                }
+                else
+                {
+                    line.Box_2_ID = '';
+                    line.Box_2_PointIndex = 0;
+                    line.x2 = x;
+                    line.y2 = y;
+                }
 
             }
             else if ( this.currentObj instanceof BoxBase)
@@ -290,6 +351,17 @@ export class Canvas01Component{
     ############################################################################################################################
     */
     Canvas_MouseUp(x:number, y:number){
+
+        if (this.yesAddLine)
+        {
+            let line:LineBase = <LineBase>this.currentObj;
+
+            if (line.Box_2_ID === "")
+            {
+                let index = this.objects.indexOf(line);
+                if (index > -1) this.objects.splice(index,1);
+            }
+        }
 
         this.YesMouseDown = false;
         this.currentObj = undefined;
