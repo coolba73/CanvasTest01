@@ -6,6 +6,7 @@ import 'rxjs/add/operator/pairWise';
 import 'rxjs/add/operator/switchMap';
 import { BaseObject } from "./shared/shape/BaseObject";
 import { BoxBase } from "./shared/shape/BoxBase";
+import { LineBase } from "./shared/shape/LineBase";
 import { UUID } from "angular2-uuid";
 import { DiagramService } from "./shared/service/DiagramService";
 
@@ -43,6 +44,7 @@ export class Canvas01Component{
 
     saveobject : string;
 
+    yesAddLine : boolean = false;
 
     constructor(private _diagramService : DiagramService){}
 
@@ -162,18 +164,43 @@ export class Canvas01Component{
         this.xpoint = x;
         this.ypoint = y;
 
-        this.message = '';
+        if (this.currentObj != undefined){
+            this.message = this.currentObj.Title;
+        }
+            
 
         if ( this.YesMouseDown && this.currentObj != undefined)
         {
-            let dx = this.pre_x - x;
-            let dy = this.pre_y - y;
 
-            (<BoxBase>this.currentObj).x -= dx;
-            (<BoxBase>this.currentObj).y -= dy;
+            if (this.yesAddLine)
+            {
+                (<LineBase>this.currentObj).x2 = x;
+                (<LineBase>this.currentObj).y2 = y;
 
-            this.pre_x = x;
-            this.pre_y = y;
+            }
+            else if ( this.currentObj instanceof BoxBase)
+            {
+                let dx = this.pre_x - x;
+                let dy = this.pre_y - y;
+                let box : BoxBase = <BoxBase>this.currentObj;
+                let circlePoint = box.CalMouseOverCirclePoint();
+
+                (<BoxBase>this.currentObj).x -= dx;
+                (<BoxBase>this.currentObj).y -= dy;
+
+                this.objects.forEach(i => {
+                    if (i instanceof LineBase ){
+                        if (i.Box_1_ID === box.Id)
+                            i.SetBoxPoint(box, 1);
+                        else if(i.Box_2_ID === box.Id)
+                            i.SetBoxPoint(box,2);
+                    }
+                });
+
+                this.pre_x = x;
+                this.pre_y = y;
+            }
+            
         }
         else
         {
@@ -206,13 +233,51 @@ export class Canvas01Component{
             element.YesSelected = false;
         });
 
-        this.currentObj = this.objects.find(i=> i.CheckMouseOver(this.ctx,x,y));
+        
+        this.objects.forEach(i => {
 
-        if (this.currentObj != null) this.currentObj.YesSelected = true;
+            if ( i instanceof BoxBase && this.yesAddLine === false ){
 
+                let re = i.CheckCircleMouseOver(this.ctx, x,y);
+
+                if (re.x >= 0){
+
+                    this.yesAddLine = true;
+                    let myline = new LineBase();
+
+                    myline.x1 = re.x;
+                    myline.y1 = re.y;
+                    myline.x2 = re.x;
+                    myline.y2 = re.y;
+                    myline.Title = "Line";
+                    myline.Box_1_ID = i.Id;
+                    myline.Box_1_PointIndex = re.PointIndex;
+                    this.currentObj = myline;
+
+                    this.objects.push(myline);
+
+                    this.message = "circle down ok";
+
+                    console.log('mouse down object : ' + this.currentObj.Title );
+
+                }
+                
+            }
+        });
+
+        if (this.yesAddLine === false){
+
+            this.currentObj = this.objects.find(i=> i.CheckMouseOver(this.ctx,x,y));
+            if (this.currentObj != null) this.currentObj.YesSelected = true;
+
+        }
 
         this.pre_x = x;
         this.pre_y = y;
+
+        if (this.currentObj != undefined)
+            console.log('mouse down object : ' + this.currentObj.Title );
+
 
 
     }
@@ -227,8 +292,8 @@ export class Canvas01Component{
     Canvas_MouseUp(x:number, y:number){
 
         this.YesMouseDown = false;
-
         this.currentObj = undefined;
+        this.yesAddLine = false;
 
     }
     
@@ -249,10 +314,12 @@ export class Canvas01Component{
         myBox.FillColor = 'lightgreen';
         myBox.Width = 100;
         myBox.Height = 100;
-        myBox.Title = this.objects.length.toString();
-        myBox.Id = UUID.UUID();
+        myBox.Title = "box "+ this.objects.length.toString();
         
         this.objects.push(myBox);
+
+
+        
 
         this.Draw();
 

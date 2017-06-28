@@ -78,7 +78,7 @@ export class BoxBase extends BaseObject{
     
     ############################################################################################################################
     */
-    private CalMouseOverCirclePoint()
+    CalMouseOverCirclePoint()
     {
 
         let mover_x1 : number;
@@ -159,25 +159,25 @@ export class BoxBase extends BaseObject{
 
         ctx.beginPath();
         ctx.arc(mp.mover_x1, mp.mover_y1, this.r, 0, 2 * Math.PI, false);
-        if ( ctx.isPointInPath(x,y)) return 1;
+        if ( ctx.isPointInPath(x,y)) return {x:mp.mover_x1, y:mp.mover_y1, PointIndex: 1};
         ctx.closePath();
 
         ctx.beginPath();
         ctx.arc(mp.mover_x2, mp.mover_y2, this.r, 0, 2 * Math.PI, false);
-        if ( ctx.isPointInPath(x,y)) return 2;
+        if ( ctx.isPointInPath(x,y)) return {x:mp.mover_x2, y:mp.mover_y2, PointIndex: 2};
         ctx.closePath();
 
         ctx.beginPath();
         ctx.arc(mp.mover_x3, mp.mover_y3, this.r, 0, 2 * Math.PI, false);
-        if ( ctx.isPointInPath(x,y)) return 3;
+        if ( ctx.isPointInPath(x,y)) return {x:mp.mover_x3, y:mp.mover_y3, PointIndex: 3};
         ctx.closePath();
 
         ctx.beginPath();
         ctx.arc(mp.mover_x4, mp.mover_y4, this.r, 0, 2 * Math.PI, false);
-        if ( ctx.isPointInPath(x,y)) return 4;
+        if ( ctx.isPointInPath(x,y)) return {x:mp.mover_x4, y:mp.mover_y4, PointIndex: 4};
         ctx.closePath();
 
-        return -1;
+        return {x:-1, y:-1, PointIndex:-1};
 
     }
 
@@ -190,7 +190,7 @@ export class BoxBase extends BaseObject{
     */
     CheckMouseOver( ctx:CanvasRenderingContext2D , x:number, y:number) : boolean {
 
-        if (this.CheckCircleMouseOver(ctx, x,y)> 0)
+        if (this.CheckCircleMouseOver(ctx, x,y).x > 0)
         {
             this.YesMouseOver = true;
             return true;
