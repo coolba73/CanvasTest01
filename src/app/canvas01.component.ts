@@ -125,6 +125,9 @@ export class Canvas01Component{
     */
     Canvas_KeyDown(e : KeyboardEvent){
 
+        let deleteLines : LineBase[] = [];
+        let deleteBoxIdList : string[] = [];
+
         if (this.YesCanvasMouseOver)
         {
             switch(e.key)
@@ -132,14 +135,35 @@ export class Canvas01Component{
                 case"Delete":{
 
                     console.log('delete');
-                    console.log(this.objects.find(i=>i.YesSelected));
 
                     this.objects.forEach(i => {
+
                         if (i.YesSelected)
                         {
+                            if (i.Type === BoxBase.name)
+                            {
+                                deleteBoxIdList.push(i.Id);
+                            }
+
                             this.DeleteObject(i);
                         }
                     });
+
+                    deleteBoxIdList.forEach(i => {
+                        this.objects.forEach(obj => {
+                            if (obj instanceof LineBase && (obj.Box_1_ID === i || obj.Box_2_ID === i))
+                            {
+                                deleteLines.push(obj);
+
+                            }
+                        });
+                    });
+
+
+                    deleteLines.forEach( line => {
+                        this.DeleteObject(line);
+                    });
+                   
 
                     this.Draw();
 
@@ -214,6 +238,10 @@ export class Canvas01Component{
 
             if (this.yesAddLine)
             {
+                this.objects.forEach(i => {
+                    i.YesMouseOver = false;
+                });
+
                 let line : LineBase = <LineBase>this.currentObj;
                 let cirpt;
                 let box = this.objects.find(i=>( 
@@ -229,6 +257,7 @@ export class Canvas01Component{
                     line.Box_2_PointIndex = cirpt.PointIndex;
                     line.x2 = cirpt.x;
                     line.y2 = cirpt.y;
+                    box.YesMouseOver = true;
                 }
                 else
                 {
@@ -263,8 +292,8 @@ export class Canvas01Component{
             }
             
         }
-        else
-        {
+        else{
+
             this.objects.forEach(i => {
 
                 if (i.CheckMouseOver(this.ctx,x,y))
@@ -274,6 +303,7 @@ export class Canvas01Component{
 
             });    
         }
+        
 
         this.Draw();
         
@@ -319,7 +349,6 @@ export class Canvas01Component{
 
                     this.message = "circle down ok";
 
-                    console.log('mouse down object : ' + this.currentObj.Title );
 
                 }
                 
@@ -337,7 +366,9 @@ export class Canvas01Component{
         this.pre_y = y;
 
         if (this.currentObj != undefined)
-            console.log('mouse down object : ' + this.currentObj.Title );
+
+
+        this.Draw();
 
 
 
@@ -366,6 +397,8 @@ export class Canvas01Component{
         this.YesMouseDown = false;
         this.currentObj = undefined;
         this.yesAddLine = false;
+
+        this.Draw();
 
     }
     
@@ -469,20 +502,11 @@ export class Canvas01Component{
     */
     Open(){
 
-        // let jsonobj = JSON.parse(this.saveobject);
+        let key1 : string = "bf0263cf-e90c-a0e7-28b2-94804945bc3e";
+        let key2 : string = "f7046d37-80a9-606c-794c-d30f65a0c538";
 
-        // let myBox : BoxBase;
 
-        // for (let obj of jsonobj){
-        
-        //     myBox = new BoxBase();
-        //     myBox.fillFromJSON(JSON.stringify( obj));
-        //     this.objects.push(myBox);
-        // }
-
-        // this.Draw();
-
-        this._diagramService.OpenDiagram("879bac02-8ae2-21d3-ebfb-7d7fff0ce6f5","d0d035c3-e4fa-612d-1d44-4a7df00c00a9").subscribe(
+        this._diagramService.OpenDiagram(key1,key2).subscribe(
             data =>{
 
                 alert('ok');
@@ -491,12 +515,22 @@ export class Canvas01Component{
                 let jsonobj = JSON.parse(data.value);
 
                 let myBox : BoxBase;
+                let myLine : LineBase;
 
                 for (let obj of jsonobj){
-                
-                    myBox = new BoxBase();
-                    myBox.fillFromJSON(JSON.stringify( obj));
-                    this.objects.push(myBox);
+
+                    if (obj.Type === BoxBase.name)
+                    {
+                        myBox = new BoxBase();
+                        myBox.fillFromJSON(JSON.stringify( obj));
+                        this.objects.push(myBox);
+                    }
+                    else if(obj.Type === LineBase.name)
+                    {
+                        myLine = new LineBase();
+                        myLine.fillFromJSON(JSON.stringify(obj));
+                        this.objects.push(myLine);
+                    }
                 }
 
                 this.Draw();
