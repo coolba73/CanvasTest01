@@ -343,12 +343,12 @@ export class Canvas01Component{
                     myline.Title = "Line";
                     myline.Box_1_ID = i.Id;
                     myline.Box_1_PointIndex = re.PointIndex;
+                    myline.YesDrawEndArrow = true;
                     this.currentObj = myline;
 
                     this.objects.push(myline);
 
                     this.message = "circle down ok";
-
 
                 }
                 

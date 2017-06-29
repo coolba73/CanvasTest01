@@ -17,6 +17,7 @@ export class BoxBase extends BaseObject{
     
     FillColor : string;
     LineColor : string;
+    LineDash : number[] = [0,0];
 
 ;
 
@@ -34,6 +35,7 @@ export class BoxBase extends BaseObject{
         this.LineColor = 'gray';
         this.Type = BoxBase.name;
 
+
     }
 
     /*
@@ -46,7 +48,8 @@ export class BoxBase extends BaseObject{
     Draw(ctx:CanvasRenderingContext2D){
 
         ctx.beginPath();
-        ctx.setLineDash([0,0]);
+        // ctx.setLineDash([0,0]);
+        ctx.setLineDash(this.LineDash);
         ctx.rect(this.x, this.y, this.Width, this.Height);
         ctx.fillStyle = this.FillColor;
         ctx.lineWidth = 1;

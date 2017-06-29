@@ -18,7 +18,6 @@ export class LineBase extends BaseObject{
     LineColor : string = 'black';
     ArrowFillColor : string = 'lightblue';
 
-    YesDrawStartArrow : boolean;
     YesDrawEndArrow : boolean
 
 
@@ -40,7 +39,9 @@ export class LineBase extends BaseObject{
         ctx.stroke();
 
         // this.DrawArror(ctx,'end');
-        this.DrawArrow2(ctx);
+
+        if (this.YesDrawEndArrow)
+            this.DrawArrow2(ctx);
 
     }
 
