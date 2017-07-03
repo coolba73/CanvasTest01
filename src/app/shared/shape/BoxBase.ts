@@ -35,7 +35,6 @@ export class BoxBase extends BaseObject{
         this.LineColor = 'gray';
         this.Type = BoxBase.name;
 
-
     }
 
     /*
@@ -56,7 +55,6 @@ export class BoxBase extends BaseObject{
         ctx.strokeStyle = this.LineColor;
         ctx.fill();
         ctx.stroke();
-
         
         if(this.YesSelected)
         {

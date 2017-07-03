@@ -515,12 +515,9 @@ export class Canvas01Component{
         myBox.FillColor = 'lightgreen';
         myBox.Width = 100;
         myBox.Height = 100;
-        myBox.Title = "box "+ this.objects.length.toString();
+        myBox.Title = "Box "+ this.objects.length.toString();
         
         this.objects.push(myBox);
-
-
-        
 
         this.Draw();
 
