@@ -46,6 +46,36 @@ export class LineBase extends BaseObject{
     }
 
     //________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+    CheckMouseOver(ctx:CanvasRenderingContext2D  , x:number, y:number) : boolean {
+
+        let Dx = this.x2 - this.x1;
+        let Dy = this.y2 - this.y1;
+        let d = Math.abs(Dy*x - Dx*y - this.x1*this.y2+this.x2*this.y1)/Math.sqrt(Math.pow(Dx, 2) + Math.pow(Dy, 2));
+
+        let x1 = Math.min(this.x1, this.x2);
+        let x2 = Math.max(this.x1, this.x2);
+        let y1 = Math.min(this.y1, this.y2);
+        let y2 = Math.max(this.y1, this.y2);
+
+        if (
+            x > x1 &&
+            x < x2 &&
+            y > y1 &&
+            y < y2 &&
+            d < 5
+        )
+        {
+            this.LineColor = 'red';
+        }
+        else{
+            this.LineColor = 'black';
+        }
+
+        return this.YesMouseOver;
+
+    }
+
+    //________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
     DrawArrow1(ctx:CanvasRenderingContext2D, where:string)
     {
         let from_x : number;

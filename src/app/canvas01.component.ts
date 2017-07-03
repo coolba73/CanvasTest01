@@ -139,6 +139,7 @@ export class Canvas01Component{
 
         let deleteLines : LineBase[] = [];
         let deleteBoxIdList : string[] = [];
+        let deleteObjList : BaseObject[] = [];
 
         if (this.YesCanvasMouseOver)
         {
@@ -157,8 +158,12 @@ export class Canvas01Component{
                                 deleteBoxIdList.push(i.Id);
                             }
 
-                            this.DeleteObject(i);
+                            deleteObjList.push(i);
                         }
+                    });
+
+                    deleteObjList.forEach(i => {
+                        this.DeleteObject(i);
                     });
 
                     deleteBoxIdList.forEach(i => {
@@ -166,16 +171,13 @@ export class Canvas01Component{
                             if (obj instanceof LineBase && (obj.Box_1_ID === i || obj.Box_2_ID === i))
                             {
                                 deleteLines.push(obj);
-
                             }
                         });
                     });
 
-
                     deleteLines.forEach( line => {
                         this.DeleteObject(line);
                     });
-                   
 
                     this.Draw();
 
@@ -353,7 +355,7 @@ export class Canvas01Component{
 
                 if (i.CheckMouseOver(this.ctx,x,y))
                 {
-                    this.message = i.Title;
+                    this.message =  "mouse over : " + i.Type;
                 }
 
             });    
