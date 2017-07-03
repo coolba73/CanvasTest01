@@ -16,7 +16,7 @@ export class LineBase extends BaseObject{
     Box_2_PointIndex : number;
 
     LineColor : string = 'black';
-    ArrowFillColor : string = 'lightblue';
+    SelectedLineColor : string = 'red';
 
     YesDrawEndArrow : boolean
 
@@ -32,7 +32,18 @@ export class LineBase extends BaseObject{
 
         ctx.beginPath();
         ctx.setLineDash([0, 0]);
-        ctx.strokeStyle = this.LineColor;
+
+        if (this.YesSelected || this.YesMouseOver)
+        {
+            ctx.setLineDash([5,5]);
+            ctx.strokeStyle = this.SelectedLineColor;
+        }
+        else
+        {
+            ctx.setLineDash([0,0]);
+            ctx.strokeStyle = this.LineColor;
+        }
+
         ctx.moveTo(this.x1, this.y1);
         ctx.lineTo(this.x2, this.y2);
         ctx.lineWidth = 1;
@@ -65,10 +76,10 @@ export class LineBase extends BaseObject{
             d < 5
         )
         {
-            this.LineColor = 'red';
+            this.YesMouseOver = true;
         }
         else{
-            this.LineColor = 'black';
+            this.YesMouseOver = false;
         }
 
         return this.YesMouseOver;
@@ -162,7 +173,7 @@ export class LineBase extends BaseObject{
         ctx.lineTo(-size, -size);
         ctx.lineTo(-size, size);
         ctx.closePath();
-        ctx.fillStyle = this.LineColor;
+        ctx.fillStyle = ctx.strokeStyle;
         ctx.fill();
 
         ctx.restore();

@@ -429,6 +429,7 @@ export class Canvas01Component{
                 if (this.currentObj != null) 
                 {
                     this.currentObj.YesSelected = true;
+                    this.message = 'selected : ' + this.currentObj.Type;
                 }
                 else{
 
