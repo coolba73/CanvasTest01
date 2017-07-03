@@ -10,6 +10,7 @@ export class SelectBox extends BaseObject{
     //________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
     constructor(){
         super();
+        this.Type = SelectBox.name;
     }
 
     //________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
@@ -18,15 +19,17 @@ export class SelectBox extends BaseObject{
         let width = Math.abs(this.x1 - this.x2);
         let hegith = Math.abs(this.y1 - this.y2);
 
+        let x = Math.min(this.x1, this.x2);
+        let y = Math.min(this.y1, this.y2);
+
         ctx.beginPath();
-        // ctx.setLineDash([0,0]);
         ctx.setLineDash([1,1]);
-        ctx.rect(this.x1, this.y1, width, hegith);
+        ctx.rect(x,y, width, hegith);
         ctx.lineWidth = 1;
-        ctx.strokeStyle = 'lightblue';
-        ctx.fill();
+        ctx.strokeStyle = 'gray';
+        //ctx.fill();
         ctx.stroke();
-        
+
     }
 
     

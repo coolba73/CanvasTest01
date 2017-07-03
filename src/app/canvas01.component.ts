@@ -9,6 +9,7 @@ import { BoxBase } from "./shared/shape/BoxBase";
 import { LineBase } from "./shared/shape/LineBase";
 import { UUID } from "angular2-uuid";
 import { DiagramService } from "./shared/service/DiagramService";
+import { SelectBox } from "./shared/shape/SelectBox";
 
 @Component({
     templateUrl : './canvas01.component.html',
@@ -50,7 +51,18 @@ export class Canvas01Component{
 
     YesCanvasMouseOver : boolean = false;
 
+    yesDrawSelectBox : boolean = false;
 
+    selectBox : SelectBox;
+    
+
+    /*
+    ############################################################################################################################
+
+    constructor
+        
+    ############################################################################################################################
+    */
     constructor(private _diagramService : DiagramService){}
 
     /*
@@ -231,66 +243,109 @@ export class Canvas01Component{
         if (this.currentObj != undefined){
             this.message = this.currentObj.Title;
         }
-            
 
-        if ( this.YesMouseDown && this.currentObj != undefined)
+        if ( this.YesMouseDown )
         {
 
-            if (this.yesAddLine)
-            {
+            if(this.yesDrawSelectBox && this.selectBox != undefined){
+                
+                this.selectBox.x2 = x;
+                this.selectBox.y2 = y;
+
                 this.objects.forEach(i => {
-                    i.YesMouseOver = false;
+                    i.YesSelected = false;
                 });
 
-                let line : LineBase = <LineBase>this.currentObj;
-                let cirpt;
-                let box = this.objects.find(i=>( 
-                    line.Box_1_ID != i.Id &&
-                    i instanceof BoxBase &&
-                    (cirpt = (<BoxBase>i).CheckCircleMouseOver(this.ctx,x,y)).PointIndex > 0
-                    )
-                );
-
-                if (box != undefined)
-                {
-                    line.Box_2_ID = box.Id;
-                    line.Box_2_PointIndex = cirpt.PointIndex;
-                    line.x2 = cirpt.x;
-                    line.y2 = cirpt.y;
-                    box.YesMouseOver = true;
-                }
-                else
-                {
-                    line.Box_2_ID = '';
-                    line.Box_2_PointIndex = 0;
-                    line.x2 = x;
-                    line.y2 = y;
-                }
+                this.objects.forEach(i => {
+                    i.CheckSelect(
+                        this.selectBox.x1,
+                        this.selectBox.y1,
+                        this.selectBox.x2,
+                        this.selectBox.y2
+                    );
+                });
 
             }
-            else if ( this.currentObj instanceof BoxBase)
+            else if( this.objects.filter(i=>i.YesSelected).length > 1 ){
+
+                let boxlist : BoxBase[] = [];
+                this.objects.filter(i=>i.YesSelected && i.Type === BoxBase.name).forEach(i => {
+                    let dx = this.pre_x - x;
+                    let dy = this.pre_y - y;
+                    (<BoxBase>i).x -= dx;
+                    (<BoxBase>i).y -= dy;
+                    let circlePoint = (<BoxBase>i).CalMouseOverCirclePoint();
+                    boxlist.push(<BoxBase>i);
+                });
+
+                boxlist.forEach(box => {
+                    this.objects.forEach(i => {
+                        if (i instanceof LineBase ){
+                            if (i.Box_1_ID === box.Id)
+                                i.SetBoxPoint(box, 1);
+                            else if(i.Box_2_ID === box.Id)
+                                i.SetBoxPoint(box,2);
+                        }
+
+                    });    
+                });
+
+            }
+            else if(this.currentObj != undefined)
             {
-                let dx = this.pre_x - x;
-                let dy = this.pre_y - y;
-                let box : BoxBase = <BoxBase>this.currentObj;
-                let circlePoint = box.CalMouseOverCirclePoint();
+                if (this.yesAddLine)
+                {
+                    this.objects.forEach(i => {
+                        i.YesMouseOver = false;
+                    });
 
-                (<BoxBase>this.currentObj).x -= dx;
-                (<BoxBase>this.currentObj).y -= dy;
+                    let line : LineBase = <LineBase>this.currentObj;
+                    let cirpt;
+                    let box = this.objects.find(i=>( 
+                        line.Box_1_ID != i.Id &&
+                        i instanceof BoxBase &&
+                        (cirpt = (<BoxBase>i).CheckCircleMouseOver(this.ctx,x,y)).PointIndex > 0
+                        )
+                    );
 
-                this.objects.forEach(i => {
-                    if (i instanceof LineBase ){
-                        if (i.Box_1_ID === box.Id)
-                            i.SetBoxPoint(box, 1);
-                        else if(i.Box_2_ID === box.Id)
-                            i.SetBoxPoint(box,2);
+                    if (box != undefined)
+                    {
+                        line.Box_2_ID = box.Id;
+                        line.Box_2_PointIndex = cirpt.PointIndex;
+                        line.x2 = cirpt.x;
+                        line.y2 = cirpt.y;
+                        box.YesMouseOver = true;
                     }
-                });
+                    else
+                    {
+                        line.Box_2_ID = '';
+                        line.Box_2_PointIndex = 0;
+                        line.x2 = x;
+                        line.y2 = y;
+                    }
 
-                this.pre_x = x;
-                this.pre_y = y;
+                }
+                else if ( this.currentObj instanceof BoxBase)
+                {
+                    let dx = this.pre_x - x;
+                    let dy = this.pre_y - y;
+                    let box : BoxBase = <BoxBase>this.currentObj;
+                    let circlePoint = box.CalMouseOverCirclePoint();
+
+                    (<BoxBase>this.currentObj).x -= dx;
+                    (<BoxBase>this.currentObj).y -= dy;
+
+                    this.objects.forEach(i => {
+                        if (i instanceof LineBase ){
+                            if (i.Box_1_ID === box.Id)
+                                i.SetBoxPoint(box, 1);
+                            else if(i.Box_2_ID === box.Id)
+                                i.SetBoxPoint(box,2);
+                        }
+                    });
+                    
+                }
             }
-            
         }
         else{
 
@@ -303,6 +358,9 @@ export class Canvas01Component{
 
             });    
         }
+
+        this.pre_x = x;
+        this.pre_y = y;
         
 
         this.Draw();
@@ -320,55 +378,80 @@ export class Canvas01Component{
 
         this.YesMouseDown = true;
 
-        this.objects.forEach(element => {
-            element.YesSelected = false;
-        });
 
-        
-        this.objects.forEach(i => {
-
-            if ( i instanceof BoxBase && this.yesAddLine === false ){
-
-                let re = i.CheckCircleMouseOver(this.ctx, x,y);
-
-                if (re.x >= 0){
-
-                    this.yesAddLine = true;
-                    let myline = new LineBase();
-
-                    myline.x1 = re.x;
-                    myline.y1 = re.y;
-                    myline.x2 = re.x;
-                    myline.y2 = re.y;
-                    myline.Title = "Line";
-                    myline.Box_1_ID = i.Id;
-                    myline.Box_1_PointIndex = re.PointIndex;
-                    myline.YesDrawEndArrow = true;
-                    this.currentObj = myline;
-
-                    this.objects.push(myline);
-
-                    this.message = "circle down ok";
-
-                }
-                
-            }
-        });
-
-        if (this.yesAddLine === false){
-
-            this.currentObj = this.objects.find(i=> i.CheckMouseOver(this.ctx,x,y));
-            if (this.currentObj != null) this.currentObj.YesSelected = true;
+        if ( this.objects.filter(i=>i.YesSelected).length > 1 &&  
+             this.objects.filter(i=>i.YesSelected).find(i=>i.CheckMouseOver(this.ctx,x,y)) != undefined )
+        {
 
         }
+        else
+        {
+            this.objects.forEach(element => {
+                element.YesSelected = false;
+            });
+            
+            this.objects.forEach(i => {
 
-        this.pre_x = x;
-        this.pre_y = y;
+                if ( i instanceof BoxBase && this.yesAddLine === false ){
 
-        if (this.currentObj != undefined)
+                    let re = i.CheckCircleMouseOver(this.ctx, x,y);
 
+                    if (re.x >= 0){
 
-        this.Draw();
+                        this.yesAddLine = true;
+                        let myline = new LineBase();
+
+                        myline.x1 = re.x;
+                        myline.y1 = re.y;
+                        myline.x2 = re.x;
+                        myline.y2 = re.y;
+                        myline.Title = "Line";
+                        myline.Box_1_ID = i.Id;
+                        myline.Box_1_PointIndex = re.PointIndex;
+                        myline.YesDrawEndArrow = true;
+                        this.currentObj = myline;
+
+                        this.objects.push(myline);
+
+                        this.message = "circle down ok";
+
+                    }
+                    
+                }
+            });
+
+            if (this.yesAddLine === false){
+
+                this.currentObj = this.objects.find(i=> i.CheckMouseOver(this.ctx,x,y));
+
+                if (this.currentObj != null) 
+                {
+                    this.currentObj.YesSelected = true;
+                }
+                else{
+
+                    this.yesDrawSelectBox = true;
+                    this.selectBox = new SelectBox();
+
+                    this.selectBox.x1 = x;
+                    this.selectBox.x2 = x;
+                    this.selectBox.y1 = y;
+                    this.selectBox.y2 = y;
+
+                    this.objects.push(this.selectBox);
+
+                }
+
+            }
+
+            this.pre_x = x;
+            this.pre_y = y;
+
+            if (this.currentObj != undefined) this.Draw();
+            
+        }
+
+        
 
 
 
@@ -393,6 +476,16 @@ export class Canvas01Component{
                 if (index > -1) this.objects.splice(index,1);
             }
         }
+        else if(this.yesDrawSelectBox){
+
+            this.objects.filter(i=>i.Type === SelectBox.name).forEach(i => {
+                this.DeleteObject(i);    
+            });
+            
+            this.yesDrawSelectBox = false;
+
+        }
+       
 
         this.YesMouseDown = false;
         this.currentObj = undefined;

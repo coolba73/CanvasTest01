@@ -33,6 +33,12 @@ export class BaseObject extends Serializable{
     CheckMouseOver(ctx:CanvasRenderingContext2D  , x:number, y:number) : boolean {
         return false;
     }
+
+    //________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+    CheckSelect(x1:number,y1:number, x2:number, y2:number):boolean{
+        return false;
+    }
+    
     
 
 }//class

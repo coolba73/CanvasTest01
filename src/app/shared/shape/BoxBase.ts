@@ -216,5 +216,34 @@ export class BoxBase extends BaseObject{
         }
     }
 
+    /*
+    ############################################################################################################################
+    
+    CheckSelect
+    
+    ############################################################################################################################
+    */
+    CheckSelect(x1:number,y1:number, x2:number, y2:number):boolean{
+        
+        this.YesSelected = false;
+
+        let mx1 = Math.min(x1,x2);
+        let my1 = Math.min(y1,y2);
+        let mx2 = Math.max(x1,x2);
+        let my2 = Math.max(y1,y2);
+
+        if ( 
+            this.x > mx1 &&
+            this.y > my1 &&
+            this.x + this.Width < mx2 &&
+            this.y + this.Height < my2
+        )
+        {
+            this.YesSelected = true;
+        }
+
+        return this.YesSelected;
+
+    }
 
 }//class
