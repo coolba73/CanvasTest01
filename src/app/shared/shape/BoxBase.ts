@@ -37,7 +37,6 @@ export class BoxBase extends BaseObject{
         this.FillColor = 'white';
         this.LineColor = 'gray';
         this.Type = BoxBase.name;
-
     }
 
     /*
@@ -82,7 +81,7 @@ export class BoxBase extends BaseObject{
         let txt_width = ctx.measureText(this.Title).width;
         let text_x = this.x + (this.Width / 2) - ( txt_width/2  );
         let text_y = this.y + (this.Height /2) + ( this.FonstSize  / 2 );
-        ctx.fillText("test", text_x, text_y);
+        ctx.fillText(this.Title, text_x, text_y);
 
         if(this.YesMouseOver)
         {

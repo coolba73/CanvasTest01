@@ -660,6 +660,10 @@ export class Canvas01Component{
     */
     SetSeq(){
 
+        this.objects.filter(i=> i instanceof BoxBase).forEach(i => {
+            (<BoxBase>i).YesTrip = false;
+        });
+
         
 
     }
