@@ -18,6 +18,7 @@ export class BoxBase extends BaseObject{
     FillColor : string;
     LineColor : string;
     LineDash : number[] = [0,0];
+    TextColor : string = "black";
 
 ;
 
@@ -66,6 +67,11 @@ export class BoxBase extends BaseObject{
             ctx.rect(this.x - gap, this.y - gap, this.Width + (gap*2), this.Height + (gap*2));
             ctx.stroke();
         }
+
+        //Draw Title
+        ctx.fillStyle = this.TextColor;
+        ctx.font = "12px Arial";
+        ctx.fillText("테스트",this.x, this.y);
 
         if(this.YesMouseOver)
         {
