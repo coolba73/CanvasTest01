@@ -514,7 +514,7 @@ export class Canvas01Component{
         myBox.y = 10;
         myBox.FillColor = 'lightgreen';
         myBox.Width = 100;
-        myBox.Height = 100;
+        myBox.Height = 50;
         myBox.Title = "Box "+ this.objects.length.toString();
         
         this.objects.push(myBox);
@@ -649,6 +649,19 @@ export class Canvas01Component{
 
         this.objects = [];
         this.Draw();
+    }
+
+    /*
+    ############################################################################################################################
+    
+    SetSeq
+    
+    ############################################################################################################################
+    */
+    SetSeq(){
+
+        
+
     }
 
 

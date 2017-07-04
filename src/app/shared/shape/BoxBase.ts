@@ -19,8 +19,10 @@ export class BoxBase extends BaseObject{
     LineColor : string;
     LineDash : number[] = [0,0];
     TextColor : string = "black";
+    FonstSize : number = 12;
 
-;
+    Seq : number = 0;
+    YesTrip : boolean = false;
 
     /*
     ############################################################################################################################
@@ -57,6 +59,10 @@ export class BoxBase extends BaseObject{
         ctx.fill();
         ctx.stroke();
         
+
+        //-------------------------------------
+        // Draw Select
+        //-------------------------------------
         if(this.YesSelected)
         {
             let gap : number = 5;
@@ -68,15 +74,26 @@ export class BoxBase extends BaseObject{
             ctx.stroke();
         }
 
-        //Draw Title
+        //-------------------------------------
+        // Draw Title
+        //-------------------------------------
         ctx.fillStyle = this.TextColor;
-        ctx.font = "12px Arial";
-        ctx.fillText("테스트",this.x, this.y);
+        ctx.font =  this.FonstSize.toString() +  "px Arial";
+        let txt_width = ctx.measureText(this.Title).width;
+        let text_x = this.x + (this.Width / 2) - ( txt_width/2  );
+        let text_y = this.y + (this.Height /2) + ( this.FonstSize  / 2 );
+        ctx.fillText("test", text_x, text_y);
 
         if(this.YesMouseOver)
         {
             this.DrawMouseOver(ctx);
         }
+
+        //-------------------------------------
+        // Draw Seq
+        //-------------------------------------
+        ctx.fillStyle = this.TextColor;
+        ctx.fillText(this.Seq.toString(), this.x, this.y-10);
 
     }
 
