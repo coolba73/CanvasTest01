@@ -22,7 +22,6 @@ export class BoxBase extends BaseObject{
     FonstSize : number = 12;
 
     Seq : number = 0;
-    YesTrip : boolean = false;
 
     /*
     ############################################################################################################################

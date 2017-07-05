@@ -54,7 +54,6 @@ export class Canvas01Component{
     yesDrawSelectBox : boolean = false;
 
     selectBox : SelectBox;
-    
 
     /*
     ############################################################################################################################
@@ -654,19 +653,77 @@ export class Canvas01Component{
     /*
     ############################################################################################################################
     
+    Test
+    
+    ############################################################################################################################
+    */
+    Test(){
+
+        let test1 = 'aaaa';
+        let test2 = '111aaaa';
+
+        this.message = ( test1 === test2 ? "equal" : "not");
+    }
+
+    /*
+    ############################################################################################################################
+    
     SetSeq
     
     ############################################################################################################################
     */
     SetSeq(){
 
+        let lineList = <LineBase[]>this.objects.filter(i=> i instanceof LineBase);
+        let rootBoxList : BoxBase[] = [];
+
         this.objects.filter(i=> i instanceof BoxBase).forEach(i => {
-            (<BoxBase>i).YesTrip = false;
+
+            (<BoxBase>i).Seq = 1;
+
+            if ( lineList.find(i=> i.Box_2_ID === i.Id ) === undefined)
+            {
+                rootBoxList.push(<BoxBase>i);
+            }
+
         });
 
+
+        rootBoxList.forEach(box => {
+            lineList.filter(i=> i.Box_1_ID === box.Id ).forEach(i=>{
+                this.Trip(i.Box_2_ID,2);
+            });
+        });
+
+        this.Draw();
+
+
+    }
+
+    /*
+    ############################################################################################################################
+    
+    Trip
+    
+    ############################################################################################################################
+    */
+    Trip(boxId:string, index:number){
         
+        let box : BoxBase = <BoxBase>this.objects.find(i=> i.Id === boxId);
+        let lineList = <LineBase[]>this.objects.filter(i=> i instanceof LineBase);
+        let childList : BoxBase[];
+        
+        box.Seq = Math.max(box.Seq, index);
+
+        lineList.forEach(i => {
+            if (i.Box_1_ID === box.Id)
+            {
+                this.Trip(i.Box_2_ID, index + 1);
+            }
+        });
 
     }
 
 
+   
 }//class
