@@ -310,11 +310,9 @@ export class Canvas01Component{
 
                     let line : LineBase = <LineBase>this.currentObj;
                     let cirpt;
-                    let box = this.objects.find(i=>( 
-                        line.Box_1_ID != i.Id &&
-                        i instanceof BoxBase &&
-                        (cirpt = (<BoxBase>i).CheckCircleMouseOver(this.ctx,x,y)).PointIndex > 0
-                        )
+
+                    let box = this.objects.filter(i=> i instanceof BoxBase && line.Box_1_ID != i.Id ).find(i=>( 
+                            cirpt = (<BoxBase>i).GetConnectPoint(this.ctx,x,y)).PointIndex > 0 
                     );
 
                     if (box != undefined)

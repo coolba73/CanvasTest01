@@ -194,7 +194,6 @@ export class BoxBase extends BaseObject{
 
         let mp = this.CalMouseOverCirclePoint();
 
-
         ctx.beginPath();
         ctx.arc(mp.mover_x1, mp.mover_y1, this.r, 0, 2 * Math.PI, false);
         if ( ctx.isPointInPath(x,y)) return {x:mp.mover_x1, y:mp.mover_y1, PointIndex: 1};
@@ -215,7 +214,7 @@ export class BoxBase extends BaseObject{
         if ( ctx.isPointInPath(x,y)) return {x:mp.mover_x4, y:mp.mover_y4, PointIndex: 4};
         ctx.closePath();
 
-        return {x:-1, y:-1, PointIndex:-1};
+        return {x:-1, y:-1, PointIndex:-1 };
 
     }
 
@@ -275,6 +274,41 @@ export class BoxBase extends BaseObject{
 
         return this.YesSelected;
 
+    }
+
+    /*
+    ############################################################################################################################
+    
+    GetCirclePointIndex
+    
+    ############################################################################################################################
+    */
+    GetConnectPoint(ctx:CanvasRenderingContext2D , x:number,y:number) {
+         
+         let ccm = this.CheckCircleMouseOver(ctx,x,y);
+
+         if (ccm.PointIndex > 0){ 
+            return ccm;
+         }
+         else if( this.CheckMouseOver(ctx,x,y)){
+
+             type tmpType = { id : number, value:number, x:number, y:number, PointIndex:number};
+             let re : tmpType[] = [];
+             let mp = this.CalMouseOverCirclePoint();
+ 
+             re.push({ id : 1, value : Math.pow(x-mp.mover_x1,2) + Math.pow(y-mp.mover_y1,2), x: mp.mover_x1 , y:mp.mover_y1, PointIndex : 1} );
+             re.push({ id : 2, value : Math.pow(x-mp.mover_x2,2) + Math.pow(y-mp.mover_y2,2), x: mp.mover_x2 , y:mp.mover_y2, PointIndex : 2} );
+             re.push({ id : 3, value : Math.pow(x-mp.mover_x3,2) + Math.pow(y-mp.mover_y3,2), x: mp.mover_x3 , y:mp.mover_y3, PointIndex : 3} );
+             re.push({ id : 4, value : Math.pow(x-mp.mover_x4,2) + Math.pow(y-mp.mover_y4,2), x: mp.mover_x4 , y:mp.mover_y4, PointIndex : 4} );
+ 
+             let reType = re.reduce( (a:tmpType,b:tmpType) : tmpType => a.value < b.value ? a:b );
+
+             return {x:reType.x, y:reType.y, PointIndex:reType.PointIndex};
+
+         }
+
+         return {x:-1, y:-1, PointIndex:-1 };   
+         
     }
 
 }//class
