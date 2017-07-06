@@ -13,6 +13,7 @@ import { SelectBox } from "./shared/shape/SelectBox";
 
 @Component({
     templateUrl : './canvas01.component.html',
+    styleUrls:['./canvas01.component.css'],
     selector:'app-root',
     providers:[DiagramService]
 })
@@ -54,6 +55,8 @@ export class Canvas01Component{
     yesDrawSelectBox : boolean = false;
 
     selectBox : SelectBox;
+
+    CanvasScale : number = 1;
 
     /*
     ############################################################################################################################
@@ -213,17 +216,22 @@ export class Canvas01Component{
         var rex;
         var rey;
 
+
         if (res.pageX || res.pageY) { 
-            rex = res.pageX;
-            rey = res.pageY;
+            rex = res.pageX + document.getElementById("container").scrollLeft ;
+            rey = res.pageY + document.getElementById("container").scrollTop;
         }
         else { 
-            rex = res.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
-            rey = res.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
+            rex = res.clientX + document.body.scrollLeft + document.documentElement.scrollLeft + document.getElementById("container").scrollLeft; 
+            rey = res.clientY + document.body.scrollTop + document.documentElement.scrollTop + document.getElementById("container").scrollTop; 
         } 
 
         rex -= canvasEl.offsetLeft;
         rey -= canvasEl.offsetTop;
+
+
+        rex = rex / this.CanvasScale;
+        rey = rey / this.CanvasScale;
 
         return {rex,rey};
     }
@@ -453,10 +461,6 @@ export class Canvas01Component{
             
         }
 
-        
-
-
-
     }
 
     /*
@@ -477,6 +481,9 @@ export class Canvas01Component{
                 let index = this.objects.indexOf(line);
                 if (index > -1) this.objects.splice(index,1);
             }
+            else{
+                this.SetSeq();
+            }
         }
         else if(this.yesDrawSelectBox){
 
@@ -485,9 +492,7 @@ export class Canvas01Component{
             });
             
             this.yesDrawSelectBox = false;
-
         }
-       
 
         this.YesMouseDown = false;
         this.currentObj = undefined;
@@ -511,7 +516,7 @@ export class Canvas01Component{
 
         myBox.x = 10;
         myBox.y = 10;
-        myBox.FillColor = 'lightgreen';
+        myBox.FillColor = 'lightblue'
         myBox.Width = 100;
         myBox.Height = 50;
         myBox.Title = "Box "+ this.objects.length.toString();
@@ -594,8 +599,8 @@ export class Canvas01Component{
     */
     Open(){
 
-        let key1 : string = "bf0263cf-e90c-a0e7-28b2-94804945bc3e";
-        let key2 : string = "f7046d37-80a9-606c-794c-d30f65a0c538";
+        let key1 : string = "bf1ed192-3c4e-4edf-a641-2f663ae73828";
+        let key2 : string = "2af7960b-9a57-6609-9656-fc5e47be0a85";
 
 
         this._diagramService.OpenDiagram(key1,key2).subscribe(
@@ -659,10 +664,14 @@ export class Canvas01Component{
     */
     Test(){
 
-        let test1 = 'aaaa';
-        let test2 = '111aaaa';
+        // let test1 = 'aaaa';
+        // let test2 = '111aaaa';
 
-        this.message = ( test1 === test2 ? "equal" : "not");
+        // this.message = ( test1 === test2 ? "equal" : "not");
+
+        console.log( document.getElementById("container").scrollLeft);
+        console.log(document.getElementById("container").scrollTop);
+
     }
 
     /*
@@ -724,6 +733,26 @@ export class Canvas01Component{
 
     }
 
+    /*
+    ############################################################################################################################
+    
+    SetScale
+    
+    ############################################################################################################################
+    */
+    SetScale(ScaleType:string){
+        
+        if (ScaleType === 'up')
+        {
+            this.CanvasScale += 1;
+        }
+        else{
+            this.CanvasScale -= 1;
+        }
 
+        this.ctx.scale(2,2);
+
+
+    }
    
 }//class

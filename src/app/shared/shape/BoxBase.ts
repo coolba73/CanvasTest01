@@ -34,7 +34,7 @@ export class BoxBase extends BaseObject{
 
         super();
         this.FillColor = 'white';
-        this.LineColor = 'gray';
+        this.LineColor = 'black';
         this.Type = BoxBase.name;
     }
 
@@ -47,6 +47,8 @@ export class BoxBase extends BaseObject{
     */
     Draw(ctx:CanvasRenderingContext2D){
 
+        ctx.save();
+
         ctx.beginPath();
         // ctx.setLineDash([0,0]);
         ctx.setLineDash(this.LineDash);
@@ -54,8 +56,18 @@ export class BoxBase extends BaseObject{
         ctx.fillStyle = this.FillColor;
         ctx.lineWidth = 1;
         ctx.strokeStyle = this.LineColor;
-        ctx.fill();
+
         ctx.stroke();
+        
+        ctx.shadowColor = '#999';
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetX = 5;
+        ctx.shadowOffsetY = 5;
+
+        ctx.fill();
+        
+
+        ctx.restore();
         
 
         //-------------------------------------

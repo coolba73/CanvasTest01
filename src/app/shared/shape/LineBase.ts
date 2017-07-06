@@ -15,8 +15,8 @@ export class LineBase extends BaseObject{
     Box_1_PointIndex : number;
     Box_2_PointIndex : number;
 
-    LineColor : string = 'black';
-    SelectedLineColor : string = 'red';
+    LineColor : string = 'gray';
+    SelectedLineColor : string = 'blue';
 
     YesDrawEndArrow : boolean
 
@@ -34,21 +34,19 @@ export class LineBase extends BaseObject{
 
         ctx.beginPath();
         ctx.setLineDash([0, 0]);
+       
 
         if (this.YesSelected || this.YesMouseOver)
         {
-            ctx.setLineDash([5,5]);
-            ctx.strokeStyle = this.SelectedLineColor;
-        }
-        else
-        {
-            ctx.setLineDash([0,0]);
-            ctx.strokeStyle = this.LineColor;
+            this.DrawSelect(ctx);
         }
 
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = this.LineColor;
         ctx.moveTo(this.x1, this.y1);
         ctx.lineTo(this.x2, this.y2);
-        ctx.lineWidth = 1;
+        
         ctx.stroke();
 
         // this.DrawArror(ctx,'end');
@@ -56,6 +54,39 @@ export class LineBase extends BaseObject{
         if (this.YesDrawEndArrow)
             this.DrawArrow2(ctx);
 
+    }
+
+    //________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+    DrawSelect(ctx:CanvasRenderingContext2D){
+
+        let mx = Math.min(this.x1, this.x2) + Math.abs(this.x1 - this.x2)/2;
+        let my = Math.min(this.y1, this.y2) +  Math.abs(this.y1 - this.y2)/2;
+        let r : number = 6;
+
+        ctx.strokeStyle = this.LineColor;
+        
+        ctx.setLineDash([0, 0]);
+        ctx.fillStyle = 'lightpink';
+
+        ctx.beginPath();
+        ctx.arc(this.x1, this.y1, r, 0, 2 * Math.PI, false);
+        ctx.fill();
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(this.x2, this.y2, r, 0, 2 * Math.PI, false);
+        ctx.fill();
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(mx, my, r, 0, 2 * Math.PI, false);
+        ctx.fill();
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        
     }
 
     //________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
@@ -71,11 +102,9 @@ export class LineBase extends BaseObject{
         let y2 = Math.max(this.y1, this.y2);
 
         if (
-            x > x1 &&
-            x < x2 &&
-            y > y1 &&
-            y < y2 &&
-            d < 5
+            (x > x1 && x < x2 && y > y1 && y < y2 && d < 5) ||
+            ( Dx < 5 && y > y1 && y < y2 && d < 5 ) ||
+            ( Dy < 5 && x > x1 && x < x2 && d < 5 ) 
         )
         {
             this.YesMouseOver = true;
@@ -172,8 +201,8 @@ export class LineBase extends BaseObject{
 
         ctx.beginPath();
         ctx.moveTo(0,0);
-        ctx.lineTo(-size, -size);
-        ctx.lineTo(-size, size);
+        ctx.lineTo(-size, -size/1.7);
+        ctx.lineTo(-size, size/1.7);
         ctx.closePath();
         ctx.fillStyle = ctx.strokeStyle;
         ctx.fill();
