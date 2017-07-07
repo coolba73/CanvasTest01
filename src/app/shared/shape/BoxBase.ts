@@ -311,4 +311,75 @@ export class BoxBase extends BaseObject{
          
     }
 
+    /*
+    ############################################################################################################################
+    
+    GetConnectPoint
+    
+    ############################################################################################################################
+    */
+    GetConnectPoint2(ctx:CanvasRenderingContext2D, from_x:number, from_y:number, x:number,y:number){
+
+        let ccm = this.CheckCircleMouseOver(ctx,x,y);
+
+         if (ccm.PointIndex > 0){ 
+            return ccm;
+         }
+         else if( this.CheckMouseOver(ctx,x,y)){
+
+             let mp = this.CalMouseOverCirclePoint();
+
+             if ( 
+                 from_x < this.x && 
+                 from_y > this.y && 
+                 from_y < (this.y + this.Height)
+                 )
+             {
+                return {x:mp.mover_x1, y:mp.mover_y1, PointIndex:1 };
+             }
+             else if(
+                 from_y < this.y &&
+                 from_x > this.x &&
+                 from_x < (this.x + this.Width)
+             )
+             {
+                return {x:mp.mover_x2, y:mp.mover_y2, PointIndex:2 };
+             }
+             else if ( 
+                 from_x > (this.x + this.Width) && 
+                 from_y > this.y && 
+                 from_y < (this.y + this.Height)
+                 )
+             {
+                return {x:mp.mover_x3, y:mp.mover_y3, PointIndex:3 };
+             }
+             else if(
+                 from_y > (this.y + this.Height) &&
+                 from_x > this.x &&
+                 from_x < (this.x + this.Width)
+             )
+             {
+                return {x:mp.mover_x4, y:mp.mover_y4, PointIndex:4 };
+             }
+             else
+             {
+                type tmpType = { id : number, value:number, x:number, y:number, PointIndex:number};
+                let re : tmpType[] = [];
+    
+                re.push({ id : 1, value : Math.pow(x-mp.mover_x1,2) + Math.pow(y-mp.mover_y1,2), x: mp.mover_x1 , y:mp.mover_y1, PointIndex : 1} );
+                re.push({ id : 2, value : Math.pow(x-mp.mover_x2,2) + Math.pow(y-mp.mover_y2,2), x: mp.mover_x2 , y:mp.mover_y2, PointIndex : 2} );
+                re.push({ id : 3, value : Math.pow(x-mp.mover_x3,2) + Math.pow(y-mp.mover_y3,2), x: mp.mover_x3 , y:mp.mover_y3, PointIndex : 3} );
+                re.push({ id : 4, value : Math.pow(x-mp.mover_x4,2) + Math.pow(y-mp.mover_y4,2), x: mp.mover_x4 , y:mp.mover_y4, PointIndex : 4} );
+    
+                let reType = re.reduce( (a:tmpType,b:tmpType) : tmpType => a.value < b.value ? a:b );
+
+                return {x:reType.x, y:reType.y, PointIndex:reType.PointIndex};
+             }
+
+         }
+
+         return {x:-1, y:-1, PointIndex:-1 };   
+
+    }
+
 }//class
