@@ -143,11 +143,13 @@ export class Canvas01Component{
         let deleteBoxIdList : string[] = [];
         let deleteObjList : BaseObject[] = [];
 
+
         if (this.YesCanvasMouseOver)
         {
-            switch(e.key)
+            switch(e.keyCode)
             {
-                case"Delete":{
+                //delete key
+                case 46:{
 
                     console.log('delete');
 
