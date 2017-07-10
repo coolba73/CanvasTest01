@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
+import { Canvas01Component } from "./canvas01.component";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    Canvas01Component
   ],
   imports: [
     BrowserModule,
@@ -15,6 +17,6 @@ import { AppComponent } from './app.component';
     HttpModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [Canvas01Component]
 })
 export class AppModule { }

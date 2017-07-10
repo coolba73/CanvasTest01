@@ -1,0 +1,20 @@
+canvas test 01
+<br>
+<button (click)="AddBox()" >add box</button>
+<button (click)="Save()" >save</button>
+<button (click)="Open()" >open</button>
+<button (click)="Clear()" >Clear</button>
+<button (click)="Test()" >Test</button>
+<button (click)="SetSeq()">Set Set </button>
+<button (click)="SetScale('up')">Scale Up </button>
+<button (click)="SetScale('down')">Scale Down </button>
+x : {{xpoint}}  y: {{ypoint}}
+message : {{message}}
+KeyDown : {{KeyDownMessage}}
+<input type="">
+<br>
+<br>
+<div id="container">
+    <canvas #myCanvas width="4000px" height="2000px" style="border:1px solid lightgray;"></canvas>
+</div>
+
